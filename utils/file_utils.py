@@ -1,6 +1,8 @@
 import os
+import zipfile
 import shutil
-from html_utils import get_soup, extract_image_names, add_name_and_label, add_alt_to_anchor_tags, add_lang_attr
+import tempfile
+from utils.html_utils import get_soup, extract_image_names, add_name_and_label, add_alt_to_anchor_tags, add_lang_attr, convert_deprecated_tags
 
 # List of deprecated HTML tags to search for
 deprecated_tags = ['strike', 'font', 'center']
@@ -28,6 +30,9 @@ def process_html_file(input_file_path, output_file_path):
     # Add lang attribute to any html tags
     soup = add_lang_attr(soup)
 
+    # Add lang attribute to any html tags
+    soup = convert_deprecated_tags(soup, ['i', 'b', 'center'])
+
     # Write modified HTML to new file in output directory
     os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
     with open(output_file_path, 'w') as f:
@@ -52,7 +57,7 @@ def process_files(input_dir, output_dir):
         if '.angular' in dirnames:
             # Skip the 'node_modules' directory and all its contents
             dirnames.remove('.angular')
-        
+
         for dirname in dirnames:
             # Recurse into subdirectories
             input_subdir = os.path.join(dirpath, dirname)
@@ -63,7 +68,6 @@ def process_files(input_dir, output_dir):
 
         for filename in filenames:
             if filename.endswith('.html'):
-                print(f"Processing {filename}")
                 input_file_path = os.path.join(dirpath, filename)
                 output_file_path = os.path.join(
                     output_dir, os.path.relpath(input_file_path, start=input_dir))
@@ -86,7 +90,6 @@ def process_files(input_dir, output_dir):
                 shutil.copy2(input_filepath, output_filepath)
 
 
-
 def process_css_file(input_file_path, output_file_path):
     """
     Traverses a directory and its subdirectories, and processes all CSS files found in them.
@@ -97,3 +100,35 @@ def process_css_file(input_file_path, output_file_path):
     """
     # This function is a placeholder and currently does nothing
     pass
+
+
+def upload_files(files):
+    input_location = "uploads"
+    output_location = "downloads"
+    # Remove existing files from the input_files directory
+    if os.path.exists(input_location):
+        shutil.rmtree(input_location)
+    os.makedirs(input_location)
+
+    if os.path.exists(output_location):
+        shutil.rmtree(output_location)
+    os.makedirs(output_location)
+
+    for file in files:
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            # Write the contents of the uploaded file to the temporary file
+            shutil.copyfileobj(file.file, tmp)
+            # Extract the uploaded zip file to the input_files directory
+            with zipfile.ZipFile(tmp.name, 'r') as zip_ref:
+                zip_ref.extractall(input_location)
+        os.unlink(tmp.name)
+
+
+def process_project(input_dir, output_dir):
+    if input_dir == output_dir:
+        raise ValueError(
+            "Input directory and output directory cannot be the same.")
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+    os.makedirs(output_dir)
+    process_files(input_dir, output_dir)

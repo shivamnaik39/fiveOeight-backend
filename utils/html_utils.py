@@ -127,21 +127,21 @@ def add_alt_to_anchor_tags(soup):
     # Loop through each anchor tag
     for anchor in anchors:
         # Check if the anchor tag already has an alt attribute
-        if anchor.has_attr('alt'):
+        if anchor.has_attr('title'):
             continue
 
         # Get the text content of the anchor tag
         text = anchor.get_text().strip()
         if not text or not text.isprintable():
-            # Extract alt from the href attribute if the text is not present or not in a readable format
+            # Extract title from the href attribute if the text is not present or not in a readable format
             href = anchor.get('href', '')
-            alt = os.path.basename(href)
+            title = os.path.basename(href)
         else:
-            # Use the text content as the alt attribute if present and in a readable format
-            alt = text
+            # Use the text content as the title attribute if present and in a readable format
+            title = text
 
-        # Set the alt attribute to the value determined above
-        anchor['alt'] = alt
+        # Set the title attribute to the value determined above
+        anchor['title'] = title
 
     return soup
 

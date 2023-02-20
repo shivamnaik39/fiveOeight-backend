@@ -1,6 +1,8 @@
 import os
 import shutil
-from file_utils import process_files
+from utils.file_utils import process_files
+
+issues = {"html": [], "css": []}
 
 
 def main(input_dir, output_dir):
@@ -16,10 +18,13 @@ def main(input_dir, output_dir):
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
-    process_files(input_dir, output_dir)
+    process_files(input_dir, output_dir, issues)
+
 
 
 if __name__ == '__main__':
-    input_dir = 'angular-demo'
-    output_dir = 'modified'
-    main(input_dir, output_dir)
+    # input_dir = 'angular-demo'
+    # output_dir = 'modified'
+    # main(input_dir, output_dir)
+    project_name = next(os.walk('uploads'))[1][0]
+    print(project_name)
