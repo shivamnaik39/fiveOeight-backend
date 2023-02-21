@@ -48,6 +48,9 @@ def fix_all_issues():
 
 @app.get("/api/download_zip")
 def download_folder(response: Response):
+    if os.path.exists("temp.zip"):
+        os.remove("temp.zip")
+        
     folder_name = next(os.walk('downloads'))[1][0]
     # Set the fixed path of the directory to download
     directory_path = os.path.join(os.getcwd(), "downloads", folder_name)
@@ -61,11 +64,13 @@ def download_folder(response: Response):
     tmp_file = os.path.join(os.getcwd(), "temp.zip")
 
     # Write the contents of the directory to the ZIP file
-    shutil.make_archive(tmp_file, "zip", directory_path)
+    shutil.make_archive(os.path.splitext(tmp_file)[0], "zip", directory_path)
 
     # Set the response headers to indicate that we are sending a ZIP file
+    zip_file_name = f"{os.path.splitext(folder_name)[0]}.zip"
     response.headers["Content-Type"] = "application/zip"
-    response.headers["Content-Disposition"] = f"attachment; filename={folder_name}.zip"
-   # Stream the ZIP file to the response using FileResponse
-    response.headers["Content-Disposition"] = f"attachment; filename={folder_name}.zip"
-    return FileResponse(tmp_file, media_type="application/zip", status_code=200, chunk_size=4096)
+    response.headers[
+        "Content-Disposition"] = f"attachment; filename={zip_file_name}"
+
+    # Stream the ZIP file to the response using FileResponse
+    return FileResponse(tmp_file, media_type="application/zip", status_code=200, filename=zip_file_name)

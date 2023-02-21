@@ -114,6 +114,9 @@ def upload_files(files):
         shutil.rmtree(output_location)
     os.makedirs(output_location)
 
+    if os.path.exists("temp.zip"):
+        os.remove("temp.zip")
+
     for file in files:
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
             # Write the contents of the uploaded file to the temporary file
@@ -132,3 +135,14 @@ def process_project(input_dir, output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
     process_files(input_dir, output_dir)
+
+
+def create_zip_file(directory_path, zip_file_path):
+    """Create a ZIP archive of the contents of a directory."""
+    shutil.make_archive(os.path.splitext(zip_file_path)
+                        [0], "zip", directory_path)
+
+
+def delete_file(file_path):
+    """Delete a file from disk."""
+    os.remove(file_path)
