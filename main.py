@@ -5,11 +5,22 @@ from utils.file_utils import upload_files, process_project
 from typing import List
 import os
 import shutil
+from fastapi.middleware.cors import CORSMiddleware
 
 
 max_response_size = 10*1024*1024  # set max_response_size to 10 megabytes
 
 app = FastAPI(max_response_size=max_response_size)
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/issues")
@@ -50,7 +61,7 @@ def fix_all_issues():
 def download_folder(response: Response):
     if os.path.exists("temp.zip"):
         os.remove("temp.zip")
-        
+
     folder_name = next(os.walk('downloads'))[1][0]
     # Set the fixed path of the directory to download
     directory_path = os.path.join(os.getcwd(), "downloads", folder_name)
