@@ -45,6 +45,9 @@ def replace_css_colors(css_file_path, output_file):
     Replaces the "color" and "background-color" properties in the given CSS file with new colors returned by
     another function.
     """
+
+    changes = []
+
     css_rules = get_css_rules(css_file_path)
     for rule in css_rules:
         # Check if the rule has both "color" and "background-color" properties
@@ -59,12 +62,22 @@ def replace_css_colors(css_file_path, output_file):
                 current_colors["color"], current_colors["background-color"])
             # If the new colors are different, update the rule with the new colors
             if new_colors["color"] != current_colors["color"] or new_colors["background-color"] != current_colors["background-color"]:
+
+                change = {
+                    'selector': rule.selectorText,
+                    'current_colors': current_colors,
+                    'suggested_colors': new_colors
+                }
+
+                changes.append(change)
+
                 rule.style.setProperty("color", new_colors["color"])
                 rule.style.setProperty(
                     "background-color", new_colors["background-color"])
 
     # Write the updated CSS file
     write_css_rules_to_file(css_rules, output_file)
+    return changes
 
 
 def update_css_colors(css_file_path, objects):
@@ -89,5 +102,3 @@ def update_css_colors(css_file_path, objects):
 # # replace_css_colors(css_file_path)
 # update_css_colors(css_file_path, [
 #                   {'selector': '.navbar', 'color': '#123', 'background-color': "#456"}])
-
-

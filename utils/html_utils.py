@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import os
 import urllib.parse
+from model.get_alt import get_alt
 
 # Load the HTML file into a BeautifulSoup object.
 
@@ -81,18 +82,19 @@ def extract_image_names(soup):
 
         # Use urllib.parse.urlsplit to split the src into components
         # and extract the path component
-        path = urllib.parse.urlsplit(src).path
+        # path = urllib.parse.urlsplit(src).path
 
         # Use os.path.basename to extract the file name from the path
-        filename = os.path.basename(path)
+        # filename = os.path.basename(path)
 
         if not img.has_attr('alt'):
             # Set the alt attribute to the file name
+            new_alt = get_alt(src)
             line_number = img.sourceline
             issue = "img tag missing alt attribute"
             old_value = img.get('alt')
-            new_value = filename
-            img['alt'] = filename
+            new_value = new_alt
+            img['alt'] = new_alt
             change = {'sourceline': line_number, 'selector': 'img[src="{0}"]'.format(
                 src), 'old_value': old_value, 'new_value': new_value, "issue":issue}
             changes.append(change)

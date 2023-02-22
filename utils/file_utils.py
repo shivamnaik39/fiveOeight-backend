@@ -17,7 +17,6 @@ def process_html_file(input_file_path, output_file_path, changes):
     :param input_file_path: path to the input HTML file
     :param output_file_path: path to the output HTML file
     """
-    
 
     soup = get_soup(input_file_path)
 
@@ -26,8 +25,8 @@ def process_html_file(input_file_path, output_file_path, changes):
 
     rel_path = os.path.relpath(input_file_path, "uploads")
 
-    if rel_path not in changes['html']:
-        changes['html'][rel_path] = alt_changes
+    if rel_path not in changes['img_alt']:
+        changes['img_alt'][rel_path] = alt_changes
 
     # Add name and label to input
     soup = add_name_and_label(soup)
@@ -46,9 +45,11 @@ def process_html_file(input_file_path, output_file_path, changes):
     with open(output_file_path, 'w') as f:
         f.write(str(soup))
 
-    #  # Write changes to log file
-    # with open("dump/changes.json", 'w') as f:
-    #     f.write(json.dumps(changes))
+    # print(changes)
+
+    # Write changes to log file
+    with open("dump/changes.json", 'w') as f:
+        f.write(json.dumps(changes))
 
 
 def process_files(input_dir, output_dir, changes):
@@ -92,7 +93,7 @@ def process_files(input_dir, output_dir, changes):
                 output_file_path = os.path.join(
                     output_dir, os.path.relpath(input_file_path, start=input_dir))
 
-                process_css_file(input_file_path, output_file_path)
+                process_css_file(input_file_path, output_file_path, changes)
 
             else:
                 # Copy non-HTML files to output directory
@@ -103,7 +104,7 @@ def process_files(input_dir, output_dir, changes):
                 shutil.copy2(input_filepath, output_filepath)
 
 
-def process_css_file(input_file_path, output_file_path):
+def process_css_file(input_file_path, output_file_path, changes):
     """
     Traverses a directory and its subdirectories, and processes all CSS files found in them.
     Currently does nothing.
@@ -112,7 +113,15 @@ def process_css_file(input_file_path, output_file_path):
     :param output_dir: path to the output directory to write the modified CSS files
     """
     # This function is a placeholder and currently does nothing
-    replace_css_colors(input_file_path, output_file_path)
+    color_changes = replace_css_colors(input_file_path, output_file_path)
+    rel_path = os.path.relpath(input_file_path, "uploads")
+
+    if rel_path not in changes['color_contrast']:
+        changes['color_contrast'][rel_path] = color_changes
+
+    # Write changes to log file
+    with open("dump/changes.json", 'w') as f:
+        f.write(json.dumps(changes))
 
 
 def upload_files(files):
@@ -141,7 +150,7 @@ def upload_files(files):
 
 
 def process_project(input_dir, output_dir):
-    changes = {"html": {}, "css": {}}
+    changes = {"img_alt": {}, "color_contrast": {}}
     if input_dir == output_dir:
         raise ValueError(
             "Input directory and output directory cannot be the same.")

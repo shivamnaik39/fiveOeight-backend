@@ -85,3 +85,10 @@ def download_folder(response: Response):
 
     # Stream the ZIP file to the response using FileResponse
     return FileResponse(tmp_file, media_type="application/zip", status_code=200, filename=zip_file_name)
+
+
+@app.get("/api/suggest_changes")
+def suggest_changes():
+    fix_all_issues()
+    file_path = "dump/changes.json"
+    return FileResponse(file_path)
