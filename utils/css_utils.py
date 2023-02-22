@@ -1,10 +1,11 @@
 import cssutils
 import logging
+from color_contrast import getValidColor
 cssutils.log.setLevel(logging.CRITICAL)
 
 
 def get_new_colors(color, background_color):
-    return {"color": "#111111", "background-color": "#000000"}
+    return getValidColor(color,background_color)
 
 
 def get_css_rules(css_file_path):
