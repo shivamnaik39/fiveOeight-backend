@@ -1,25 +1,33 @@
 import os
+import json
 import zipfile
 import shutil
 import tempfile
 from utils.html_utils import get_soup, extract_image_names, add_name_and_label, add_alt_to_anchor_tags, add_lang_attr, convert_deprecated_tags
+from utils.css_utils import replace_css_colors, update_css_colors
 
 # List of deprecated HTML tags to search for
 deprecated_tags = ['strike', 'font', 'center']
 
 
-def process_html_file(input_file_path, output_file_path):
+def process_html_file(input_file_path, output_file_path, changes):
     """
     Processes a single HTML file, searching for deprecated tags and replacing them with span tags.
 
     :param input_file_path: path to the input HTML file
     :param output_file_path: path to the output HTML file
     """
+    
 
     soup = get_soup(input_file_path)
 
     # extract alt tags for image
-    soup = extract_image_names(soup)
+    soup, alt_changes = extract_image_names(soup)
+
+    rel_path = os.path.relpath(input_file_path, "uploads")
+
+    if rel_path not in changes['html']:
+        changes['html'][rel_path] = alt_changes
 
     # Add name and label to input
     soup = add_name_and_label(soup)
@@ -38,8 +46,12 @@ def process_html_file(input_file_path, output_file_path):
     with open(output_file_path, 'w') as f:
         f.write(str(soup))
 
+    #  # Write changes to log file
+    # with open("dump/changes.json", 'w') as f:
+    #     f.write(json.dumps(changes))
 
-def process_files(input_dir, output_dir):
+
+def process_files(input_dir, output_dir, changes):
     """
     Traverses a directory and its subdirectories, and processes all HTML files found in them.
 
@@ -64,22 +76,23 @@ def process_files(input_dir, output_dir):
             output_subdir = os.path.join(
                 output_dir, os.path.relpath(input_subdir, start=input_dir))
             os.makedirs(output_subdir, exist_ok=True)
-            process_files(input_subdir, output_subdir)
+            process_files(input_subdir, output_subdir, changes)
 
         for filename in filenames:
+            print(filename)
             if filename.endswith('.html'):
                 input_file_path = os.path.join(dirpath, filename)
                 output_file_path = os.path.join(
                     output_dir, os.path.relpath(input_file_path, start=input_dir))
 
-                process_html_file(input_file_path, output_file_path)
+                process_html_file(input_file_path, output_file_path, changes)
 
-            # elif filename.endswith('.css'):
-            #     input_file_path = os.path.join(dirpath, filename)
-            #     output_file_path = os.path.join(
-            #         output_dir, os.path.relpath(input_file_path, start=input_dir))
+            elif filename.endswith('.css'):
+                input_file_path = os.path.join(dirpath, filename)
+                output_file_path = os.path.join(
+                    output_dir, os.path.relpath(input_file_path, start=input_dir))
 
-            #     process_css_file(input_file_path, output_file_path)
+                process_css_file(input_file_path, output_file_path)
 
             else:
                 # Copy non-HTML files to output directory
@@ -99,7 +112,7 @@ def process_css_file(input_file_path, output_file_path):
     :param output_dir: path to the output directory to write the modified CSS files
     """
     # This function is a placeholder and currently does nothing
-    pass
+    replace_css_colors(input_file_path, output_file_path)
 
 
 def upload_files(files):
@@ -128,13 +141,14 @@ def upload_files(files):
 
 
 def process_project(input_dir, output_dir):
+    changes = {"html": {}, "css": {}}
     if input_dir == output_dir:
         raise ValueError(
             "Input directory and output directory cannot be the same.")
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir)
-    process_files(input_dir, output_dir)
+    process_files(input_dir, output_dir, changes)
 
 
 def create_zip_file(directory_path, zip_file_path):

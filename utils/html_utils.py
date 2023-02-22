@@ -3,6 +3,8 @@ import os
 import urllib.parse
 
 # Load the HTML file into a BeautifulSoup object.
+
+
 def get_soup(input_file_path):
     with open(input_file_path, 'r') as f:
         soup = BeautifulSoup(f, 'html.parser')
@@ -10,6 +12,8 @@ def get_soup(input_file_path):
     return soup
 
 # Modify the attributes of elements in the HTML.
+
+
 def modify_elements_attributes(soup, elements):
     """
     Modify the attributes of elements in the HTML.
@@ -66,7 +70,8 @@ def extract_image_names(soup):
     This function takes in an HTML document as a string and returns a modified version of the HTML document
     with the `alt` attribute set to the name of the image from the `src` attribute.
     """
-
+    tmp = {"img-alt":[]}
+    changes = tmp['img-alt']
     # Find all the img tags in the HTML document
     images = soup.find_all('img')
     # Loop through each img tag
@@ -81,10 +86,18 @@ def extract_image_names(soup):
         # Use os.path.basename to extract the file name from the path
         filename = os.path.basename(path)
 
-        # Set the alt attribute to the file name
-        img['alt'] = filename
+        if not img.has_attr('alt'):
+            # Set the alt attribute to the file name
+            line_number = img.sourceline
+            issue = "img tag missing alt attribute"
+            old_value = img.get('alt')
+            new_value = filename
+            img['alt'] = filename
+            change = {'sourceline': line_number, 'selector': 'img[src="{0}"]'.format(
+                src), 'old_value': old_value, 'new_value': new_value, "issue":issue}
+            changes.append(change)
 
-    return soup
+    return soup, tmp
 
 
 def add_name_and_label(soup):
@@ -153,7 +166,7 @@ def add_lang_attr(soup, lang="en"):
     """
     # Find the <html> tag
     html_tag = soup.find('html')
-    
+
     # Check if the <html> tag exists
     if html_tag is None:
         return soup

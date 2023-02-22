@@ -15,6 +15,7 @@ tensorflow = "*"
 keras = "*"
 opencv-python = "*"
 python-multipart = "*"
+cssutils = "*"
 
 [dev-packages]
 autopep8 = "*"
