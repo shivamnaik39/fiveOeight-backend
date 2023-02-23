@@ -169,3 +169,5 @@ def create_zip_file(directory_path, zip_file_path):
 def delete_file(file_path):
     """Delete a file from disk."""
     os.remove(file_path)
+
+
