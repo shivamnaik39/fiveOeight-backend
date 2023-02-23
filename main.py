@@ -1,11 +1,13 @@
-from fastapi import FastAPI, File, UploadFile, Response
+from fastapi import FastAPI, File, UploadFile, Response, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
 from utils.issues import get_issues
 from utils.file_utils import upload_files, process_project
+from utils.update_utils import update_data
 from typing import List
 import os
 import shutil
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Dict
 
 
 max_response_size = 10*1024*1024  # set max_response_size to 10 megabytes
@@ -92,3 +94,12 @@ def suggest_changes():
     fix_all_issues()
     file_path = "dump/changes.json"
     return FileResponse(file_path)
+
+
+@app.post("/api/update_changes")
+def update_changes(changes:Dict):
+    try:
+        update_data(changes)
+        return {"message": "Changes updated successfully"}
+    except:
+        raise HTTPException(status_code=500, detail="Error processing data")
