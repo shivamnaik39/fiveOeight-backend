@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.imagenet_utils import decode_predictions
 
 from tensorflow.keras.applications.imagenet_utils import preprocess_input
-import cv2``
+import cv2
 
 
 
