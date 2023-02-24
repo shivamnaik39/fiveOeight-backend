@@ -52,13 +52,18 @@ def process_html_file(input_file_path, output_file_path, changes):
         f.write(json.dumps(changes))
 
 
-def process_files(input_dir, output_dir, changes):
+def process_files(input_dir, output_dir, changes, processed_files=None):
     """
     Traverses a directory and its subdirectories, and processes all HTML files found in them.
 
     :param input_dir: path to the input directory to traverse
     :param output_dir: path to the output directory to write the modified HTML files
     """
+
+    if processed_files is None:
+        processed_files = set()
+
+
     for dirpath, dirnames, filenames in os.walk(input_dir):
         if 'node_modules' in dirnames:
             # Skip the 'node_modules' directory and all its contents
@@ -77,26 +82,30 @@ def process_files(input_dir, output_dir, changes):
             output_subdir = os.path.join(
                 output_dir, os.path.relpath(input_subdir, start=input_dir))
             os.makedirs(output_subdir, exist_ok=True)
-            process_files(input_subdir, output_subdir, changes)
+            process_files(input_subdir, output_subdir, changes,processed_files)
 
         for filename in filenames:
-            print(filename)
-            if filename.endswith('.html'):
+            if filename.endswith('.html') and filename not in processed_files:
+                processed_files.add(filename)
+                print(filename)
                 input_file_path = os.path.join(dirpath, filename)
                 output_file_path = os.path.join(
                     output_dir, os.path.relpath(input_file_path, start=input_dir))
 
                 process_html_file(input_file_path, output_file_path, changes)
 
-            elif filename.endswith('.css'):
+            elif filename.endswith('.css') and filename not in processed_files:
+                processed_files.add(filename)
+                print(filename)
                 input_file_path = os.path.join(dirpath, filename)
                 output_file_path = os.path.join(
                     output_dir, os.path.relpath(input_file_path, start=input_dir))
 
                 process_css_file(input_file_path, output_file_path, changes)
 
-            else:
+            elif filename not in processed_files:
                 # Copy non-HTML files to output directory
+                processed_files.add(filename)
                 input_filepath = os.path.join(dirpath, filename)
                 output_filepath = os.path.join(
                     output_dir, os.path.relpath(input_filepath, start=input_dir))
