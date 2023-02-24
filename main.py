@@ -30,11 +30,12 @@ def get_accessibility_issues(url: str):
     issues = get_issues(url)
     return issues
 
+accepted_content_types = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream', 'application/x-compress', 'application/x-tar']
 
 @app.post("/api/upload_zip")
 def upload_zip(files: List[UploadFile] = File(...)):
     for file in files:
-        if file.content_type != 'application/zip':
+        if file.content_type not in accepted_content_types:
             return JSONResponse(content={"message": f"File {file.filename} is not a zip file"}, status_code=400)
 
     try:
