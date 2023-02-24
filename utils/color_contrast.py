@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import requests
+import urllib.request
 
 def checkEmpty(soup):
     return soup.find("div",class_="h2-on-empty-result")
@@ -18,9 +18,10 @@ def getNewColor(div_with_id):
 
 def makeRequest(fgColor,bgColor,isBg):
     url = f'https://app.contrast-finder.org/result.html?foreground=%23{fgColor[1:]}&background=%23{bgColor[1:]}&ratio=4.5&isBackgroundTested={isBg}&algo=Rgb&lang=en'
-    response = requests.get(url)
-
-    soup = BeautifulSoup(response.content, 'html.parser')
+    # response = urllib.request.urlretrieve(url)
+    # Fetch the HTML content of the webpage
+    html_content = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html_content, 'html.parser')
     return soup
 
 

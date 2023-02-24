@@ -91,7 +91,6 @@ def download_folder(response: Response):
 
 @app.get("/api/suggest_changes")
 def suggest_changes():
-    fix_all_issues()
     file_path = "dump/changes.json"
     return FileResponse(file_path)
 

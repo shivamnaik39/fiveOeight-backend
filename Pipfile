@@ -16,6 +16,7 @@ keras = "*"
 opencv-python = "*"
 python-multipart = "*"
 cssutils = "*"
+colour = "*"
 
 [dev-packages]
 autopep8 = "*"

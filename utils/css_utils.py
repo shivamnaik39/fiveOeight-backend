@@ -5,8 +5,9 @@ cssutils.log.setLevel(logging.CRITICAL)
 
 
 def get_new_colors(color, background_color):
-    # new_color = getValidColor(color, background_color)
-    new_color = {"color": "#ffffff", "background-color": "#000000"}
+    new_color = getValidColor(color, background_color)
+    # new_color = {"color": "#ffffff", "background-color": "#000000"}
+    print(new_color)
     return new_color
 
 
