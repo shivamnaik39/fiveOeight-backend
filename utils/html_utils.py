@@ -9,7 +9,7 @@ from utils.video_utils import transcribe_audio
 
 def get_soup(input_file_path):
     with open(input_file_path, 'r') as f:
-        soup = BeautifulSoup(f, 'html.parser')
+        soup = BeautifulSoup(f, 'html.parser', format=None)
 
     return soup
 
@@ -194,8 +194,8 @@ def process_video(soup, input_file_path, output_file_path):
         final_path = join_paths(input_file_path, video_src)
         # call the function with the video source URL
         output_path = join_paths(output_file_path, video_src)
-        processed_src = transcribe_audio(final_path,output_path)
-        
+        processed_src = transcribe_audio(final_path, output_path)
+
         # add a track element to the video element with the processed URL
         video_name = os.path.basename(video_src)
         track_src = os.path.splitext(video_name)[0] + '.srt'

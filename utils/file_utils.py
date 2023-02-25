@@ -91,7 +91,16 @@ def process_files(input_dir, output_dir, changes, processed_files=None):
                           changes, processed_files)
 
         for filename in filenames:
-            if filename.endswith('.html') and filename not in processed_files:
+            skip_files = ["cart-page", "footer", "header",
+                          "home", "not-found", "product-page", "search"]
+
+            skip_files_html = [f"{x}.component.html" for x in skip_files]
+            skip_files_css = [f"{x}.component.css" for x in skip_files]
+
+            condition_html = filename not in skip_files_html
+            condition_css = filename not in skip_files_css
+
+            if filename.endswith('.html') and condition_html and filename not in processed_files:
                 processed_files.add(filename)
                 print(filename)
                 input_file_path = os.path.join(dirpath, filename)
@@ -100,7 +109,7 @@ def process_files(input_dir, output_dir, changes, processed_files=None):
 
                 process_html_file(input_file_path, output_file_path, changes)
 
-            elif filename.endswith('.css') and filename not in processed_files:
+            elif filename.endswith('.css') and condition_css and filename not in processed_files:
                 processed_files.add(filename)
                 print(filename)
                 input_file_path = os.path.join(dirpath, filename)
