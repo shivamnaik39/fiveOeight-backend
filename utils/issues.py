@@ -4,6 +4,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from axe_selenium_python import Axe
 import json
 import os
+from typing import Dict, List, Any
 
 
 def get_driver():
@@ -34,15 +35,25 @@ def get_issues(url: str):
     if not os.path.exists("dump"):
         os.makedirs("dump")
 
-    # write to a json file
+    # Write violations to a JSON file
     with open("dump/issues.json", "w") as file:
         file.write(json.dumps(results["violations"], indent=2))
 
-    # return the violations of the website
-    # return results["violations"]
-    # dummy = [{"name": "shivam", "age": 23} for i in range(10000)]
-    violations = results["violations"]
-    relevant_violations = filter_violations(violations)
+    # # Take screenshots of the violations and save them to a directory
+    # if results["violations"]:
+    #     if not os.path.exists("dump/screenshots"):
+    #         os.makedirs("dump/screenshots")
+
+    #     for i, violation in enumerate(results["violations"]):
+    #         screenshot_path = os.path.join("dump/screenshots", f"{i}.png")
+    #         driver.save_screenshot(screenshot_path)
+
+    # Filter the violations of the website
+    relevant_violations = filter_violations(results["violations"])
+
+    # Quit the browser
+    driver.quit()
+
     return relevant_violations
 
 
@@ -56,31 +67,21 @@ def filter_violations(violations):
 # get_issues("http://127.0.0.1:5500/test.html")
 
 
-def take_element_screenshots(json_data, url):
-    # Set up WebDriver and navigate to URL
-    driver = webdriver.Chrome()
-    driver.get(url)
+def take_screenshots(violations: List[Dict[str, Any]]):
+    if not os.path.exists("dump/screenshots"):
+        os.makedirs("dump/screenshots")
 
-    # Create screenshots directory if it doesn't exist
-    screenshots_dir = "dump/screenshots"
-    if not os.path.exists(screenshots_dir):
-        os.makedirs(screenshots_dir)
+    # Set up Selenium to run the Chrome browser
+    driver = get_driver()
 
-    # Get selectors from JSON file
-    selectors = json_data["color_contrast"]
+    for i, violation in enumerate(violations):
+        # Navigate to the page and the element of the violation
+        driver.get(violation["url"])
+        target = driver.find_element_by_css_selector(violation["selector"])
 
-    # Iterate through selectors and take screenshots
-    for selector in selectors:
-        # Find element using selector
-        element = driver.find_element_by_css_selector(selector)
+        # Take a screenshot of the element and save it to a file
+        screenshot_path = os.path.join("dump/screenshots", f"{i}.png")
+        target.screenshot(screenshot_path)
 
-        # Take screenshot of element
-        screenshot = element.screenshot_as_png
-
-        # Save screenshot to file
-        screenshot_file = os.path.join(screenshots_dir, f"{selector}.png")
-        with open(screenshot_file, "wb") as file:
-            file.write(screenshot)
-
-    # Quit WebDriver
+    # Quit the browser
     driver.quit()

@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from utils.issues import get_issues
 from utils.file_utils import upload_files, process_project
 from utils.update_utils import update_data
+from utils.screenshot import take_batch_screenshot
 from typing import List
 import os
 import shutil
@@ -30,7 +31,10 @@ def get_accessibility_issues(url: str):
     issues = get_issues(url)
     return issues
 
-accepted_content_types = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream', 'application/x-compress', 'application/x-tar']
+
+accepted_content_types = ['application/zip', 'application/x-zip-compressed',
+                          'application/octet-stream', 'application/x-compress', 'application/x-tar']
+
 
 @app.post("/api/upload_zip")
 def upload_zip(files: List[UploadFile] = File(...)):
@@ -92,14 +96,23 @@ def download_folder(response: Response):
 
 @app.get("/api/suggest_changes")
 def suggest_changes():
+    fix_all_issues()
     file_path = "dump/changes.json"
     return FileResponse(file_path)
 
 
 @app.post("/api/update_changes")
-def update_changes(changes:Dict):
+def update_changes(changes: Dict):
     try:
         update_data(changes)
         return {"message": "Changes updated successfully"}
+    except:
+        raise HTTPException(status_code=500, detail="Error processing data")
+
+@app.get("/api/color_contrast_screenshots")
+def get_screenshots(url):
+    try:
+        take_batch_screenshot(url)
+        return {"message": "Sucess"}
     except:
         raise HTTPException(status_code=500, detail="Error processing data")
