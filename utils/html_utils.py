@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import os
 import urllib.parse
 from model.get_alt import get_alt
+from utils.video_utils import transcribe_audio
 
 # Load the HTML file into a BeautifulSoup object.
 
@@ -71,7 +72,7 @@ def extract_image_names(soup):
     This function takes in an HTML document as a string and returns a modified version of the HTML document
     with the `alt` attribute set to the name of the image from the `src` attribute.
     """
-    tmp = {"img-alt":[]}
+    tmp = {"img-alt": []}
     changes = tmp['img-alt']
     # Find all the img tags in the HTML document
     images = soup.find_all('img')
@@ -96,7 +97,7 @@ def extract_image_names(soup):
             new_value = new_alt
             img['alt'] = new_alt
             change = {'sourceline': line_number, 'selector': 'img[src="{0}"]'.format(
-                src), 'old_value': old_value, 'new_value': new_value, "issue":issue}
+                src), 'old_value': old_value, 'new_value': new_value, "issue": issue}
             changes.append(change)
 
     return soup, tmp
@@ -181,3 +182,43 @@ def add_lang_attr(soup, lang="en"):
     html_tag['lang'] = lang
 
     return soup
+
+
+def process_video(soup, input_file_path, output_file_path):
+    # find the first video element in the soup object
+    video = soup.find('video')
+    print(f"Video: {video}")
+    if video:
+        # get the src attribute of the source element within the video element
+        video_src = video.find('source')['src']
+        final_path = join_paths(input_file_path, video_src)
+        # call the function with the video source URL
+        output_path = join_paths(output_file_path, video_src)
+        processed_src = transcribe_audio(final_path,output_path)
+        
+        # add a track element to the video element with the processed URL
+        video_name = os.path.basename(video_src)
+        track_src = os.path.splitext(video_name)[0] + '.srt'
+        print(track_src)
+        track = soup.new_tag('track', src=track_src,
+                             kind='captions', srclang='en')
+        video.append(track)
+
+    return soup
+
+
+def join_paths(html_path, video_path):
+    # Normalize the paths
+    html_path = os.path.normpath(html_path)
+    video_path = os.path.normpath(video_path)
+
+    # Get the directory of the HTML file
+    html_dir = os.path.dirname(html_path)
+
+    # Join the directory of the HTML file with the relative video path
+    abs_video_path = os.path.join(html_dir, video_path)
+
+    # Normalize the resulting path
+    abs_video_path = os.path.normpath(abs_video_path)
+
+    return abs_video_path

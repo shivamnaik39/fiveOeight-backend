@@ -17,6 +17,9 @@ opencv-python = "*"
 python-multipart = "*"
 cssutils = "*"
 colour = "*"
+openai-whisper = "*"
+moviepy = "*"
+pywhisper = "*"
 
 [dev-packages]
 autopep8 = "*"
