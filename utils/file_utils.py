@@ -3,7 +3,7 @@ import json
 import zipfile
 import shutil
 import tempfile
-from utils.html_utils import get_soup, extract_image_names, add_name_and_label, add_alt_to_anchor_tags, add_lang_attr, convert_deprecated_tags
+from utils.html_utils import get_soup, extract_image_names, add_name_and_label, add_alt_to_anchor_tags, add_lang_attr, convert_deprecated_tags, process_video
 from utils.css_utils import replace_css_colors, update_css_colors
 
 # List of deprecated HTML tags to search for
@@ -37,6 +37,9 @@ def process_html_file(input_file_path, output_file_path, changes):
     # Add lang attribute to any html tags
     soup = add_lang_attr(soup)
 
+    # Add captions to video
+    # soup = process_video(soup, input_file_path, output_file_path)
+
     # Add lang attribute to any html tags
     soup = convert_deprecated_tags(soup, ['i', 'b', 'center'])
 
@@ -46,6 +49,9 @@ def process_html_file(input_file_path, output_file_path, changes):
         f.write(str(soup))
 
     # print(changes)
+
+    if not os.path.exists("dump"):
+        os.makedirs("dump")
 
     # Write changes to log file
     with open("dump/changes.json", 'w') as f:
@@ -62,7 +68,6 @@ def process_files(input_dir, output_dir, changes, processed_files=None):
 
     if processed_files is None:
         processed_files = set()
-
 
     for dirpath, dirnames, filenames in os.walk(input_dir):
         if 'node_modules' in dirnames:
@@ -82,7 +87,8 @@ def process_files(input_dir, output_dir, changes, processed_files=None):
             output_subdir = os.path.join(
                 output_dir, os.path.relpath(input_subdir, start=input_dir))
             os.makedirs(output_subdir, exist_ok=True)
-            process_files(input_subdir, output_subdir, changes,processed_files)
+            process_files(input_subdir, output_subdir,
+                          changes, processed_files)
 
         for filename in filenames:
             if filename.endswith('.html') and filename not in processed_files:
@@ -127,6 +133,9 @@ def process_css_file(input_file_path, output_file_path, changes):
 
     if rel_path not in changes['color_contrast']:
         changes['color_contrast'][rel_path] = color_changes
+
+    if not os.path.exists("dump"):
+        os.makedirs("dump")
 
     # Write changes to log file
     with open("dump/changes.json", 'w') as f:
@@ -178,5 +187,3 @@ def create_zip_file(directory_path, zip_file_path):
 def delete_file(file_path):
     """Delete a file from disk."""
     os.remove(file_path)
-
-
