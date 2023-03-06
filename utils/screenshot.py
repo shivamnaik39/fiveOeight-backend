@@ -29,7 +29,9 @@ def take_element_screenshot(url, css_selector):
     driver.get(url)
     element = driver.find_element(By.CSS_SELECTOR, css_selector)
 
+    
     element.screenshot(f"screenshots/{css_selector}.png")
+
     driver.quit()
 
 
@@ -53,5 +55,10 @@ def take_batch_screenshot(url):
             res.extend(temp)
 
     for elm in res:
-        selector = elm['selector']
-        take_element_screenshot(url, selector)
+        print(elm['selector'])
+        if elm['selector'] not in [".main", ".form h2"]:
+            selector = elm['selector']
+            take_element_screenshot(url, selector)
+
+
+# take_batch_screenshot("http://localhost:4200/")

@@ -91,11 +91,14 @@ def process_files(input_dir, output_dir, changes, processed_files=None):
                           changes, processed_files)
 
         for filename in filenames:
-            skip_files = ["cart-page", "footer", "header",
-                          "home", "not-found", "product-page", "search"]
+            skip_files1 = ["cart-page", "footer", "header",
+                           "home", "not-found", "product-page", "search", "tags"]
 
-            skip_files_html = [f"{x}.component.html" for x in skip_files]
-            skip_files_css = [f"{x}.component.css" for x in skip_files]
+            skip_files2 = ["cart-page",
+                           "home", "not-found", "product-page", "search", "tags"]
+
+            skip_files_html = [f"{x}.component.html" for x in skip_files1]
+            skip_files_css = [f"{x}.component.css" for x in skip_files2]
 
             condition_html = filename not in skip_files_html
             condition_css = filename not in skip_files_css

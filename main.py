@@ -96,7 +96,7 @@ def download_folder(response: Response):
 
 @app.get("/api/suggest_changes")
 def suggest_changes():
-    fix_all_issues()
+    # fix_all_issues();
     file_path = "dump/changes.json"
     return FileResponse(file_path)
 
@@ -116,3 +116,10 @@ def get_screenshots(url):
         return {"message": "Sucess"}
     except:
         raise HTTPException(status_code=500, detail="Error processing data")
+
+
+@app.get("/api/get_logs")
+def suggest_changes():
+    # fix_all_issues();
+    file_path = "dump/changes.json"
+    return FileResponse(file_path)

@@ -20,7 +20,6 @@ def update_data(data):
 def update_html(filepath, img_alt_list):
     # Function to process img-alt data for HTML files
     # Here, we'll use Beautiful Soup to update the HTML file
-
     # Open the HTML file using the given filepath
     with open(filepath, 'r') as f:
         html = f.read()
@@ -30,12 +29,15 @@ def update_html(filepath, img_alt_list):
 
     # Iterate over each img-alt object in the img_alt_list
     for img_alt_obj in img_alt_list:
-        # Get the img tag using the selector from the img-alt object
-        img_tag = soup.select_one(img_alt_obj['selector'])
+        # Get the src url from the selector of the img-alt object
+        src_url = img_alt_obj['selector'].split('"')[1]
+        # Find all img tags with the src attribute equal to the src_url
+        img_tags = soup.find_all('img', {'src': src_url})
 
-        # If the img tag is found, update its alt attribute
-        if img_tag:
-            img_tag['alt'] = img_alt_obj['new_value']
+        # If img tags are found, update their alt attributes
+        if img_tags:
+            for img_tag in img_tags:
+                img_tag['alt'] = img_alt_obj['new_value']
 
     # Write the updated HTML back to the file
     with open(filepath, 'w') as f:
@@ -56,7 +58,7 @@ def update_css(filepath, color_contrast_list):
                 # Update the color and background-color properties
                 rule.style.setProperty(
                     'color', obj['suggested_colors']['color'], '')
-                
+
                 rule.style.setProperty(
                     'background-color', obj['suggested_colors']['background-color'], '')
 

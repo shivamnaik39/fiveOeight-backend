@@ -9,7 +9,7 @@ from utils.video_utils import transcribe_audio
 
 def get_soup(input_file_path):
     with open(input_file_path, 'r') as f:
-        soup = BeautifulSoup(f, 'html.parser', format=None)
+        soup = BeautifulSoup(f, 'html.parser')
 
     return soup
 
