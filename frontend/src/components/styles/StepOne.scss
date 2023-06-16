@@ -1,0 +1,90 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:200);
+
+.container{
+  max-width: 400px; /* set a maximum width */
+  // border: #ca5010; /* add a border */
+  padding: 0px;
+  margin: 10px;
+}
+
+.SectionDiv{
+  body{ background-color: antiquewhite;
+  max-width: 80%;}
+  // .SectionDiv{ width: 800px;}
+  .cartPanel{  width: 150px;
+     height:120px; float: left; margin-right: 25px;
+      margin-bottom: 25px; border-radius: 10px; 
+      background-color: white; padding:12px; 
+      text-align: center;}
+  .cartPanel:hover{ background-color:#E4E4E5; cursor: pointer;} 
+}
+.SectionDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  
+}
+
+.cartPanel {
+  width: 200px;
+  height: 200px;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+  transition: all 0.2s ease-in-out; /* add transition property */
+  border:1px solid grey;
+}
+
+.cartPanel:hover {
+  background-color: #E4E4E5;
+  cursor: pointer;
+}
+
+/* add styles for selected cart panel */
+.cartPanel.selected {
+  border: 2px solid #fd5f06;
+  // box-shadow: 0 0 10px #ca5010;
+  background-color: #e8ccbd ;
+}
+
+.cartPanel.selected:hover {
+  background-color:#e6d4ca ;
+  cursor: pointer;
+}
+.my-btn {
+  background-color: #fd5f06!important;
+  color: white;
+  font-size: 1.2rem;
+  padding: 8px 20px;
+  border: 1px solid #d77b3d!important;
+  border-radius: 10px;
+  outline: none;
+  box-shadow: none;
+  transition: all 0.2s;
+  margin-right: -24.7rem;
+}
+
+.my-btn:hover {
+  background-color: #ca5010!important;  
+  cursor: pointer;
+}
+
+.my-btn:active {
+  background-color: #ca5010!important;
+  transform: translateY(1px);
+}
+
+// .styledButton {
+//   background-color: #ca5010;
+//   color: white;
+//   font-size: 1.2rem;
+//   padding: 10px 20px;
+//   border: none;
+//   border-radius: 20px;
+//   box-shadow: none;
+// }

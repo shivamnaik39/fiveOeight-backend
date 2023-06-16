@@ -1,0 +1,87 @@
+.navbar {
+    border-radius: 0;
+    color: rgb(26, 25, 25);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 33;
+    background-color: #f9f9f9;
+    border-bottom:0.5px solid rgb(169, 167, 167);
+    padding: 1rem;
+    position: sticky; top:0;
+  }
+
+  // .navbar-brand {
+  //   display: flex;
+  //   align-items: center;
+  // }
+  
+  .navbar-brand img {
+    margin-right: 2rem;
+  }
+  
+  .navbar-brand span {
+    font-family: Georgia, 'Times New Roman', Times, serif,sans-serif!important; 
+    // font-weight: bold;
+    // text-transform: uppercase;
+   
+ 
+    font-size: 20px;
+     font-weight: bold;
+    letter-spacing: 1.0px;
+    margin-left: 19px;
+   
+
+  }
+  .circle {
+    display: inline-block;
+      background-color: #ffffff;
+      margin: 0px;
+      border-radius: 50%;
+      border: 1px solid rgb(0, 0, 0);
+  }
+  
+  .circle-inner {
+    color: rgb(13, 1, 1);
+    display: table-cell;
+    vertical-align: middle; 
+    text-align: center;
+    text-decoration: none;
+    height: 20px;
+    width: 20px;  
+    font-size: 15px;
+    padding: 20%;
+    padding-right: 1.0em;
+    //  border: 1px solid grey;
+  }
+  
+  // .navbar-brand {
+  // //   padding-top: 0;
+  // //   padding-bottom: 0;
+  // //   height: 60px;
+  // // }
+  
+  
+  // .navbar-brand span {
+  //   float: left;
+  // }
+  
+  // .navbar-brand span:first-child {
+  //   padding-top: 20px;
+  // }
+  
+  .navbar-inverse {
+    background-color: #ffffff ;
+    justify-content: right;
+    // border-color: #fdfcfc;
+  }
+  
+   .navbar-header {
+     margin-left: 1.1rem;
+   }
+   .fa-cog{
+    width: 20px;
+    height: 5px;
+    
+   }
+  

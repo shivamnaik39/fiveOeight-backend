@@ -1,0 +1,30 @@
+.fetching-loader-container {
+    background: #f4f4f4;
+    color: black;
+    width: 40%;
+    margin-left: 10rem;
+    /*padding-left: 10rem;
+    padding-bottom: 2rem;*/
+    margin: 0 auto;
+    text-align: center;
+    .error-loader-percentage {
+       /* margin-left:1rem;
+        margin-top:3rem;*/
+        padding: 45px;
+    }
+
+    .error-status {
+        display: inline-flex;
+        column-gap: 5rem;
+        height: 3rem;
+    }
+    .loader-circle{
+        
+    margin-bottom: -6.4rem;
+    margin-left: -0.5rem;
+    }
+
+    .loader-text{
+        margin-left:-1rem;
+    }
+}

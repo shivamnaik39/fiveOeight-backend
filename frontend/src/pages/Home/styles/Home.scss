@@ -1,0 +1,21 @@
+body{
+    overflow-x: hidden;
+}
+
+.checker-container{
+    width: 85%;
+    margin-left: 7rem;
+    margin-top:1rem;
+    //  overflow-x: hidden;
+}
+
+#step4{
+    button{
+        margin-top: 1rem;
+    }
+}
+button{
+    background-color: #a1421a !important;
+    cursor: pointer;
+    color:white !important;
+}
