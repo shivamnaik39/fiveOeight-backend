@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "*"
+selenium = "*"
+fastapi = "*"
+pydantic = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+axe-selenium-python = "*"
+python-multipart = "*"
+cssutils = "*"
+colour = "*"
+matplotlib = "*"
+tensorflow = "*"
+keras = "*"
+openai-whisper = "*"
+moviepy = "*"
+pywhisper = "*"
+opencv-python-headless = "*"
+
+[dev-packages]
+autopep8 = "*"
+
+[requires]
+python_version = "3.10"
+
+[scripts]
+dev = "uvicorn main:app --reload"
+start = "uvicorn main:app"

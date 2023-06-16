@@ -1,15 +1,28 @@
-# FiveOEight Backend
-
-## Project Setup
-- Install Python (3.10) and Pipenv
-- Clone and navigate to projcect directory
-- install dependencies and run server
+# Development
 ```bash
-pipenv install 
+# Frontend React 
+cd frontend
+npm install
+npm start
+
+# Backend FastAPI
+cd backend
+pipenv install
 pipenv shell
-uvicorn main:app --reload
+pipenv run dev
+
 ```
 
-### Api Documentation
+# Production
+```bash
+cd frontend
+npm install
+npm build
+cp -r  build/ ../backend/
 
- #### http://127.0.0.1:8000/docs
+cd ../backend
+pipenv install
+pipenv shell
+pipenv run start
+
+```
