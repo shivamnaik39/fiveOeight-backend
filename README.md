@@ -17,7 +17,7 @@ pipenv run dev
 ```bash
 cd frontend
 npm install
-npm build
+npm run build
 cp -r  build/ ../backend/
 
 cd ../backend

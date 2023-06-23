@@ -29,4 +29,4 @@ python_version = "3.10"
 
 [scripts]
 dev = "uvicorn main:app --reload"
-start = "uvicorn main:app"
+start = "uvicorn main:app --port 8000"
