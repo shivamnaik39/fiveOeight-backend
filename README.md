@@ -26,3 +26,10 @@ pipenv shell
 pipenv run start
 
 ```
+
+# Docker
+```bash
+docker build . -t five_o_eight
+docker run --name five_o_eight-app -p 8000:8000 five_o_eight
+
+```
